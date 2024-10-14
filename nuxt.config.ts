@@ -23,13 +23,17 @@ export default defineNuxtConfig({
 
   css: ['/public/assets/css/myProject.webflow.css', '/public/assets/css/main.css'],
 
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', 'nuxt-icon'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', 'nuxt-icon', 'nuxt-time'],
 
-  components: ['~/components/modals', '~/components/shimmers', '~/components/widgets', '~/components'],
+  components: ['~/components'],
 
   runtimeConfig: {
-    public: {
-      baseURL: process.env.BASE_URL
+    url: 'http://localhost:3002',
+    github: {
+      token: '',
+      // OAuth client
+      clientId: '',
+      clientSecret: ''
     }
   }
 })
