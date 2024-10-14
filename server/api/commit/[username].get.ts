@@ -45,13 +45,13 @@ export default defineEventHandler(async (event: H3Event) => {
   const parsedUser = UserSchema._parse(user.value).output
   const commit = ResultsSchema._parse(results.value).output?.items[0]
 
-    if (!commit) {
-      // @ts-expect-error unknown
-      if (results?.total_count) {
-        console.log(JSON.stringify(ResultsSchema._parse(results).issues))
-      }
-      throw createError({ statusCode: 404, message: 'no commits to show' })
+  if (!commit) {
+    // @ts-expect-error unknown
+    if (results?.total_count) {
+      console.log(JSON.stringify(ResultsSchema._parse(results).issues))
     }
+    throw createError({ statusCode: 404, message: 'no commits to show' })
+  }
 
   // Prepare the response object
   const response = {
@@ -76,6 +76,11 @@ export default defineEventHandler(async (event: H3Event) => {
       : null
   }
 
+  // Check if username is present; if not, throw an error
+  if (!response.username) {
+    throw createError({ statusCode: 400, message: 'Not enough data about this user.' })
+  }
+  
   return response
 })
 
