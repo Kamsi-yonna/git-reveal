@@ -24,7 +24,7 @@
             <header v-if="commit.username" class="relative flex flex-row items-center gap-4">
                 <div v-if="!commit"
                     class="absolute font-cal tabular-nums right-0 top-0 h-6 w-16 animate-pulse bg-gray-400" />
-                <NuxtTime v-else class="absolute font-cal tabular-nums right-0 top-0" :datetime="commit.date"
+                <NuxtTime v-else class="absolute font-cal tabular-nums right-0 top-0" :datetime="commit.firstCommit.date"
                     year="numeric" />
                 <div v-if="!commit" class="rounded-full h-16 w-16 animate-pulse bg-gray-400" />
                 <img v-else class="rounded-full h-16 w-16" :src="commit?.avatar"
