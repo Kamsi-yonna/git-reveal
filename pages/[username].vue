@@ -10,7 +10,7 @@
                 </svg>
                 Find yours
             </NuxtLink>
-            <UserNameForm v-model="newUsername" :placeholder="username" density="compact" @submit="openCommit" />
+            <UserNameForm v-model="newUsername" :placeholder="username" density="compact" @submit="openUser" />
         </nav>
         <main v-if="errorMessage"
             class="p-4 md:p-8 shadow-md max-w-[500px] w-full mx-auto border-[1px] border-red-400 rounded-md">
@@ -40,6 +40,10 @@
                     <div v-if="!commit" class="leading-none opacity-50 text-sm h-4 w-24 animate-pulse bg-gray-400" />
                     <span v-else class="leading-none opacity-50 text-sm">
                         @{{ commit.username }}
+                    </span>
+                    <div v-if="!commit" class="leading-none opacity-50 text-sm h-4 w-24 animate-pulse bg-gray-400" />
+                    <span v-else class="leading-none opacity-50 text-sm">
+                        {{ commit.bio }}
                     </span>
                 </NuxtLink>
             </header>
@@ -83,7 +87,7 @@
 // import 'cal-sans'
 
 definePageMeta({
-    alias: ["/commit/:username"],
+    alias: ["/user/:username"],
     middleware: (to) => {
         if (to.path !== to.path.toLowerCase()) {
             return to.path.toLowerCase();
