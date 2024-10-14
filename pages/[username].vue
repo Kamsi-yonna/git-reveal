@@ -16,16 +16,17 @@
             class="p-4 md:p-8 shadow-md max-w-[500px] w-full mx-auto border-[1px] border-red-400 rounded-md">
             <p class="text-red-600 text-sm">Oops! {{ errorMessage.toLowerCase() }}</p>
             <p class="text-red-500 text-sm">
-                <small>Do you wish to try again?</small>
+                <small>Please try entering a different username.</small>
             </p>
         </main>
+
         <main v-else
             class="p-4 md:p-8 shadow-md max-w-[500px] w-full mx-auto border-[1px] border-gray-600 rounded-md transition-[padding] ease-out">
-            <header v-if="commit.username" class="relative flex flex-row items-center gap-4">
+            <header v-if="commit" class="relative flex flex-row items-center gap-4">
                 <div v-if="!commit"
                     class="absolute font-cal tabular-nums right-0 top-0 h-6 w-16 animate-pulse bg-gray-400" />
-                <NuxtTime v-else class="absolute font-cal tabular-nums right-0 top-0" :datetime="commit.firstCommit.date"
-                    year="numeric" />
+                <NuxtTime v-else class="absolute font-cal tabular-nums right-0 top-0"
+                    :datetime="commit.firstCommit.date" year="numeric" />
                 <div v-if="!commit" class="rounded-full h-16 w-16 animate-pulse bg-gray-400" />
                 <img v-else class="rounded-full h-16 w-16" :src="commit?.avatar"
                     :alt="`Avatar for ${commit.username}`" />
@@ -43,16 +44,6 @@
                 </NuxtLink>
             </header>
             <hr class="my-4" />
-            <!-- {{ commit }} -->
-
-            <!-- Display user bio, location, and organization -->
-            <div class="mb-4">
-                <p v-if="!commit" class="h-5 animate-pulse bg-gray-300 w-full" />
-                <p v-if="commit?.bio" class="text-sm"><strong>Bio:</strong> {{ commit.bio }}</p>
-                <p v-if="commit?.location" class="text-sm"><strong>Location:</strong> {{ commit.location }}</p>
-                <p v-if="commit?.organization" class="text-sm"><strong>Organization:</strong> {{ commit.organization }}
-                </p>
-            </div>
 
             <div class="flex items-center justify-between gap-4">
                 <NuxtLink class="flex flex-col gap-2 line-clamp-1" :href="commit?.firstCommit.link" target="_blank"
@@ -112,8 +103,6 @@ function openCommit() {
 const { data: commit, error } = await useFetch(`/api/commit/${username}`, {
     lazy: true,
 });
-
-console.log(commit, 'commit')
 
 useSeoMeta({
     title: "Git-reveal - @" + username,
