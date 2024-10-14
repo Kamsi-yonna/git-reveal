@@ -96,11 +96,11 @@ const username = route.params.username;
 
 const newUsername = ref("");
 
-function openCommit() {
+function openUser() {
     navigateTo(`/${newUsername.value.toLowerCase()}`);
 }
 
-const { data: commit, error } = await useFetch(`/api/commit/${username}`, {
+const { data: commit, error } = await useFetch(`/api/user/${username}`, {
     lazy: true,
 });
 

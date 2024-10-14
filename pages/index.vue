@@ -24,7 +24,7 @@ useServerHead({
 })
 
 const username = ref('')
-async function openCommit() {
+async function openUser() {
   return navigateTo(`/${username.value.toLowerCase()}`)
 }
 </script>
@@ -45,7 +45,7 @@ async function openCommit() {
           class="mx-auto text-sm flex flex-row gap-2 items-center before:border-t-2 before:border-gray-400 before:content-[''] before:w-2 before:h-0 before:inline-block after:border-t-2 after:border-gray-400 after:content-[''] after:w-2 after:h-0 after:inline-block">
           or enter username
         </span>
-        <UserNameForm v-model="username" placeholder="kamsi-yonna" @submit="openCommit" />
+        <UserNameForm v-model="username" placeholder="kamsi-yonna" @submit="openUser" />
       </main>
     </div>
 
