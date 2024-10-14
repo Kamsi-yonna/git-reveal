@@ -146,7 +146,7 @@ const errorMessage = computed(() => {
 const shareLink = computed(
     () =>
         `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            message.value + `\n\nhttps://Git-reveal/${username}`
+            message.value + `\n\nhttps://git-reveal.netlify.app/${username}`
         )}`
 );
 
@@ -156,7 +156,7 @@ async function nativeShare() {
             return await navigator.share({
                 title: "Git-reveal",
                 text: message.value,
-                url: `https://Git-reveal/${username}`,
+                url: `https://git-reveal.netlify.app/${username}`,
             });
         }
     } catch {
