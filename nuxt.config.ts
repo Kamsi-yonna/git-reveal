@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   components: ['~/components'],
 
   runtimeConfig: {
-    url: 'https://git-reveal.netlify.app',
+    redirectUri: process.env.NUXT_REDIRECT_URI,
     github: {
       token: process.env.NUXT_GITHUB_TOKEN,
       clientId: process.env.NUXT_GITHUB_CLIENT_ID,
