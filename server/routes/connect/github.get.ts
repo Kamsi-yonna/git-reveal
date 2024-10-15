@@ -7,11 +7,14 @@ export default defineEventHandler(async (event) => {
   const state = randomUUID()
   setCookie(event, 'state', state)
 
+  const redirectUri = joinURL(config.url, 'oauth/github')
+  console.log('Redirect URI:', redirectUri)
+
   return await sendRedirect(
     event,
     withQuery('https://github.com/login/oauth/authorize', {
       client_id: config.github.clientId,
-      redirect_uri: joinURL(config.url, 'oauth/github'),
+      redirect_uri: redirectUri,
       state
     })
   )

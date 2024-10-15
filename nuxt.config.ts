@@ -28,12 +28,11 @@ export default defineNuxtConfig({
   components: ['~/components'],
 
   runtimeConfig: {
-    url: 'http://localhost:3002',
+    url: process.env.NUXT_ENV === 'production' ? 'https://git-reveal.netlify.app' : 'http://localhost:3002',
     github: {
-      token: '',
-      // OAuth client
-      clientId: '',
-      clientSecret: ''
+      token: process.env.NUXT_GITHUB_TOKEN,
+      clientId: process.env.NUXT_GITHUB_CLIENT_ID,
+      clientSecret: process.env.NUXT_GITHUB_CLIENT_SECRET
     }
   }
 })
