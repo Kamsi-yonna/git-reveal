@@ -10,7 +10,7 @@
                 </svg>
                 Find yours
             </NuxtLink>
-            <UserNameForm v-model="newUsername" :placeholder="username" density="compact" @submit="openCommit" />
+            <UserNameForm v-model="newUsername" :placeholder="username" density="compact" @submit="openUser" />
         </nav>
         <main v-if="errorMessage"
             class="p-4 md:p-8 shadow-md max-w-[500px] w-full mx-auto border-[1px] border-red-400 rounded-md">
@@ -22,43 +22,47 @@
 
         <main v-else
             class="p-4 md:p-8 shadow-md max-w-[500px] w-full mx-auto border-[1px] border-gray-600 rounded-md transition-[padding] ease-out">
-            <header v-if="commit" class="relative flex flex-row items-center gap-4">
-                <div v-if="!commit"
+            <header v-if="gitUser" class="relative flex flex-row items-center gap-4">
+                <div v-if="!gitUser"
                     class="absolute font-cal tabular-nums right-0 top-0 h-6 w-16 animate-pulse bg-gray-400" />
                 <NuxtTime v-else class="absolute font-cal tabular-nums right-0 top-0"
-                    :datetime="commit.firstCommit.date" year="numeric" />
-                <div v-if="!commit" class="rounded-full h-16 w-16 animate-pulse bg-gray-400" />
-                <img v-else class="rounded-full h-16 w-16" :src="commit?.avatar"
-                    :alt="`Avatar for ${commit.username}`" />
-                <NuxtLink class="flex flex-col items-start gap-2" :to="commit?.authorUrl" target="_blank"
+                    :datetime="gitUser.firstCommit.date" year="numeric" />
+                <div v-if="!gitUser" class="rounded-full h-16 w-16 animate-pulse bg-gray-400" />
+                <img v-else class="rounded-full h-16 w-16" :src="gitUser?.avatar"
+                    :alt="`Avatar for ${gitUser.username}`" />
+                <NuxtLink class="flex flex-col items-start gap-2" :to="gitUser?.authorUrl" target="_blank"
                     rel="noopener noreferrer">
-                    <div v-if="!commit"
+                    <div v-if="!gitUser"
                         class="leading-none text-lg font-cal font-semibold h-5 w-32 animate-pulse bg-gray-400" />
                     <span v-else class="leading-none text-lg font-cal font-semibold">
-                        {{ commit.author }}
+                        {{ gitUser.author }}
                     </span>
-                    <div v-if="!commit" class="leading-none opacity-50 text-sm h-4 w-24 animate-pulse bg-gray-400" />
+                    <div v-if="!gitUser" class="leading-none opacity-50 text-sm h-4 w-24 animate-pulse bg-gray-400" />
                     <span v-else class="leading-none opacity-50 text-sm">
-                        @{{ commit.username }}
+                        @{{ gitUser.username }}
+                    </span>
+                    <div v-if="!gitUser" class="leading-none opacity-50 text-sm h-4 w-24 animate-pulse bg-gray-400" />
+                    <span v-else class="leading-none opacity-50 text-sm">
+                        {{ gitUser.bio }}
                     </span>
                 </NuxtLink>
             </header>
             <hr class="my-4" />
 
             <div class="flex items-center justify-between gap-4">
-                <NuxtLink class="flex flex-col gap-2 line-clamp-1" :href="commit?.firstCommit.link" target="_blank"
+                <NuxtLink class="flex flex-col gap-2 line-clamp-1" :href="gitUser?.firstCommit.link" target="_blank"
                     rel="noopener noreferrer">
-                    <div v-if="!commit" class="h-5 w-64 animate-pulse bg-gray-300" />
+                    <div v-if="!gitUser" class="h-5 w-64 animate-pulse bg-gray-300" />
                     <span v-else class="line-clamp-1">
-                        {{ commit.firstCommit.message }}
+                        {{ gitUser.firstCommit.message }}
                     </span>
                     <span class="text-xs">
                         <span class="flex flex-row gap-2 items-center">
-                            <img v-if="commit" class="rounded-full h-4 w-4"
-                                :src="commit.firstCommit.repositoryOwnerAvatar"
-                                :alt="`Avatar for ${commit.organization}`" />
-                            <div v-if="!commit" class="h-4 w-48 animate-pulse bg-gray-200" />
-                            <span v-if="commit">{{ commit.firstCommit.repositoryName }}</span>
+                            <img v-if="gitUser" class="rounded-full h-4 w-4"
+                                :src="gitUser.firstCommit.repositoryOwnerAvatar"
+                                :alt="`Avatar for ${gitUser.organization}`" />
+                            <div v-if="!gitUser" class="h-4 w-48 animate-pulse bg-gray-200" />
+                            <span v-if="gitUser">{{ gitUser.firstCommit.repositoryName }}</span>
                         </span>
                     </span>
                 </NuxtLink>
@@ -83,7 +87,7 @@
 // import 'cal-sans'
 
 definePageMeta({
-    alias: ["/commit/:username"],
+    alias: ["/user/:username"],
     middleware: (to) => {
         if (to.path !== to.path.toLowerCase()) {
             return to.path.toLowerCase();
@@ -96,11 +100,11 @@ const username = route.params.username;
 
 const newUsername = ref("");
 
-function openCommit() {
+function openUser() {
     navigateTo(`/${newUsername.value.toLowerCase()}`);
 }
 
-const { data: commit, error } = await useFetch(`/api/commit/${username}`, {
+const { data: gitUser, error } = await useFetch(`/api/user/${username}`, {
     lazy: true,
 });
 
@@ -111,18 +115,18 @@ useSeoMeta({
 useServerSeoMeta({
     ogTitle: "Git-reveal - @" + username,
     twitterTitle: "Git-reveal - @" + username,
-    description: "The first commit of " + username + " on GitHub",
-    ogDescription: "The first commit of " + username + " on GitHub",
+    description: "" + username + " on GitHub",
+    ogDescription: "" + username + " on GitHub",
     twitterCard: "summary_large_image",
 });
 
 const user = useCookie("github-user");
 const message = computed(() => {
     if (user.value === username) {
-        return `Check out my first commit on GitHub!`;
+        return `Check me out on GitHub!`;
     }
 
-    return `Check out ${username}'s first commit on GitHub.`;
+    return `Check out ${username}'s GitHub.`;
 });
 
 const errorMessage = computed(() => {
