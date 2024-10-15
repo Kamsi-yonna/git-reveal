@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   components: ['~/components'],
 
   runtimeConfig: {
-    url: process.env.NUXT_ENV === 'production' ? 'https://git-reveal.netlify.app' : 'http://localhost:3002',
+    url: 'https://git-reveal.netlify.app',
     github: {
       token: process.env.NUXT_GITHUB_TOKEN,
       clientId: process.env.NUXT_GITHUB_CLIENT_ID,
