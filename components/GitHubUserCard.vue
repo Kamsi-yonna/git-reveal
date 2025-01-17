@@ -64,15 +64,11 @@
                 </span>
             </NuxtLink>
 
-           
+
         </div>
     </main>
 </template>
 
 <script setup lang="ts">
 defineProps(['gitUser']);
-
-
 </script>
-
-<style lang="scss" scoped></style>

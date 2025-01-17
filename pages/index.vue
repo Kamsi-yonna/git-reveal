@@ -1,34 +1,3 @@
-<script setup lang="ts">
-
-useSeoMeta({
-  title: 'Git Reveal',
-})
-
-useServerSeoMeta({
-  ogTitle: 'Git Reveal',
-  twitterTitle: 'Git Reveal',
-  description: 'Find your GitHub User Profile.',
-  ogDescription: 'Find your GitHub User Profile.',
-  twitterCard: 'summary_large_image',
-})
-
-useServerSeoMeta({
-  ogSiteName: 'Git Reveal',
-  twitterSite: '@Kamsi_yonna',
-})
-
-useServerHead({
-  htmlAttrs: {
-    lang: 'en',
-  }
-})
-
-const username = ref('')
-async function openUser() {
-  return navigateTo(`/${username.value.toLowerCase()}`)
-}
-</script>
-
 <template>
   <div class="min-h-[100svh] flex flex-col justify-stretch">
     <div class="flex-grow flex flex-col mx-auto justify-center p-2">
@@ -65,3 +34,34 @@ async function openUser() {
     </footer>
   </div>
 </template>
+
+<script setup lang="ts">
+
+useSeoMeta({
+  title: 'Git Reveal',
+})
+
+useServerSeoMeta({
+  ogTitle: 'Git Reveal',
+  twitterTitle: 'Git Reveal',
+  description: 'Find your GitHub User Profile.',
+  ogDescription: 'Find your GitHub User Profile.',
+  twitterCard: 'summary_large_image',
+})
+
+useServerSeoMeta({
+  ogSiteName: 'Git Reveal',
+  twitterSite: '@Kamsi_yonna',
+})
+
+useServerHead({
+  htmlAttrs: {
+    lang: 'en',
+  }
+})
+
+const username = ref('')
+async function openUser() {
+  return navigateTo(`/${username.value.toLowerCase()}`)
+}
+</script>

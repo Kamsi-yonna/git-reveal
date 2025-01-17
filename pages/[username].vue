@@ -104,6 +104,7 @@ const errorMessage = computed(() => {
 });
 
 const user = useCookie("github-user");
+
 useSeoMeta({
     title: "Git-reveal - @" + username,
 });
@@ -115,25 +116,4 @@ useServerSeoMeta({
     ogDescription: "" + username + " on GitHub",
     twitterCard: "summary_large_image",
 });
-
-const shareLink = computed(() =>
-    `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        message.value + `\n\nhttps://git-reveal.netlify.app/${username}`
-    )}`
-);
-
-async function nativeShare() {
-    try {
-        if (navigator.share) {
-            return await navigator.share({
-                title: "Git-reveal",
-                text: message.value,
-                url: `https://git-reveal.netlify.app/${username}`,
-            });
-        }
-    } catch (error) {
-        console.error('Error sharing:', error);
-    }
-    return navigateTo(shareLink.value, { external: true, open: { target: "_blank" } });
-}
 </script>

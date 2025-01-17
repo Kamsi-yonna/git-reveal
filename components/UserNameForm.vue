@@ -1,15 +1,3 @@
-<script setup lang="ts">
-
-defineProps<{
-    placeholder?: string
-    density?: 'compact' | 'default'
-}>()
-
-defineEmits(['submit'])
-
-const usernameModel = defineModel<string>()
-</script>
-
 <template>
     <form
         class="grid grid-cols-[1fr_auto] gap-2 mx-auto border-black border-2 rounded-md shadow-sm leading-none w-full overflow-hidden"
@@ -27,3 +15,15 @@ const usernameModel = defineModel<string>()
         </button>
     </form>
 </template>
+
+<script setup lang="ts">
+
+defineProps<{
+    placeholder?: string
+    density?: 'compact' | 'default'
+}>()
+
+defineEmits(['submit'])
+
+const usernameModel = defineModel<string>()
+</script>
