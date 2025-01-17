@@ -1,23 +1,49 @@
 import * as v from 'valibot'
 
+export interface GitHubUser {
+  username: string
+  author?: string
+  avatar: string
+
+  repositoryStats?: {
+    totalRepositories: number
+    totalStars: number
+  }
+  activityMetrics?: {
+    followerCount: number
+  }
+  bio?: string
+  firstCommit?: {
+    message: string
+    link: string
+    repositoryOwnerAvatar?: string
+    repositoryName: string
+  }
+  authorUrl?: string // Add any other properties you expect
+}
+
 export const ContributionStatsSchema = v.object({
   total_contributions: v.number(),
-  weeks: v.array(v.object({
-    w: v.string(),
-    c: v.number(),
-  }))
+  weeks: v.array(
+    v.object({
+      w: v.string(),
+      c: v.number()
+    })
+  )
 })
 
 export const ActivitySchema = v.object({
   total_count: v.number(),
-  items: v.array(v.object({
-    type: v.string(),
-    created_at: v.string(),
-    repo: v.object({
-      name: v.string(),
-      url: v.string()
+  items: v.array(
+    v.object({
+      type: v.string(),
+      created_at: v.string(),
+      repo: v.object({
+        name: v.string(),
+        url: v.string()
+      })
     })
-  }))
+  )
 })
 
 export const LanguageStatsSchema = v.record(v.string(), v.number())
