@@ -11,11 +11,9 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
+import type { GitHubUser } from '~/utils/schemas/githubSchemas'
 
-const props = defineProps({
-    gitUser: {
-        type: Object,
-        required: true,
-    },
-});
+const props = defineProps<{
+    gitUser: GitHubUser | null; // Allow null
+}>();
 </script>
