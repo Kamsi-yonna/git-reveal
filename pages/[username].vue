@@ -12,6 +12,8 @@
             </NuxtLink>
             <UserNameForm v-model="newUsername" :placeholder="username" density="compact" @submit="openUser" />
         </nav>
+
+        <!-- Error Display -->
         <main v-if="errorMessage"
             class="p-4 md:p-8 shadow-md max-w-[500px] w-full mx-auto border-[1px] border-red-400 rounded-md">
             <p class="text-red-600 text-sm">Oops! {{ errorMessage.toLowerCase() }}</p>
@@ -20,54 +22,74 @@
             </p>
         </main>
 
-        <main v-else
+        <main v-else-if="gitUser"
             class="p-4 md:p-8 shadow-md max-w-[500px] w-full mx-auto border-[1px] border-gray-600 rounded-md transition-[padding] ease-out">
-            <header v-if="gitUser" class="relative flex flex-row items-center gap-4">
-                <div v-if="!gitUser"
-                    class="absolute font-cal tabular-nums right-0 top-0 h-6 w-16 animate-pulse bg-gray-400" />
-                <NuxtTime v-else class="absolute font-cal tabular-nums right-0 top-0"
-                    :datetime="gitUser.firstCommit.date" year="numeric" />
-                <div v-if="!gitUser" class="rounded-full h-16 w-16 animate-pulse bg-gray-400" />
-                <img v-else class="rounded-full h-16 w-16" :src="gitUser?.avatar"
-                    :alt="`Avatar for ${gitUser.username}`" />
-                <NuxtLink class="flex flex-col items-start gap-2" :to="gitUser?.authorUrl" target="_blank"
-                    rel="noopener noreferrer">
-                    <div v-if="!gitUser"
-                        class="leading-none text-lg font-cal font-semibold h-5 w-32 animate-pulse bg-gray-400" />
-                    <span v-else class="leading-none text-lg font-cal font-semibold">
-                        {{ gitUser.author }}
-                    </span>
-                    <div v-if="!gitUser" class="leading-none opacity-50 text-sm h-4 w-24 animate-pulse bg-gray-400" />
-                    <span v-else class="leading-none opacity-50 text-sm">
-                        @{{ gitUser.username }}
-                    </span>
-                    <div v-if="!gitUser" class="leading-none opacity-50 text-sm h-4 w-24 animate-pulse bg-gray-400" />
-                    <span v-else class="leading-none opacity-50 text-sm">
-                        {{ gitUser.bio }}
-                    </span>
-                </NuxtLink>
-            </header>
-            <hr class="my-4" />
+            <header class="relative flex  items-center gap-4 justify-between">
+                <!-- Profile picture and username -->
+                <div class="flex flex-row gap-4 items-center">
+                    <img class="rounded-full h-16 w-16" :src="gitUser.avatar" :alt="`Avatar for ${gitUser.username}`" />
 
+                    <NuxtLink class="flex flex-col gap-2" :to="gitUser.authorUrl" target="_blank"
+                        rel="noopener noreferrer">
+                        <span class="leading-none text-lg font-cal font-semibold">
+                            {{ gitUser.author || gitUser.username }}
+                        </span>
+                        <span class="leading-none opacity-50 text-sm">
+                            @{{ gitUser.username }}
+                        </span>
+                    </NuxtLink>
+                </div>
+
+                <!-- user stats  -->
+                <div class="flex flex-row gap-2 items-center">
+                    <div class="flex flex-row gap-4">
+                        <div class="flex flex-col items-start">
+                            <span class="text-sm font-medium">{{ gitUser.repositoryStats?.totalRepositories || 0
+                                }}</span>
+                            <span class="text-xs text-gray-600">Repos</span>
+                        </div>
+                        <div class="flex flex-col items-start">
+                            <span class="text-sm font-medium">{{ gitUser.activityMetrics?.followerCount || 0 }}</span>
+                            <span class="text-xs text-gray-600">Followers</span>
+                        </div>
+                        <div class="flex flex-col items-start">
+                            <span class="text-sm font-medium">{{ gitUser.repositoryStats?.totalStars || 0 }}</span>
+                            <span class="text-xs text-gray-600">Stars</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <hr class="my-4" />
+            <!-- user bio -->
             <div class="flex items-center justify-between gap-4">
-                <NuxtLink class="flex flex-col gap-2 line-clamp-1" :href="gitUser?.firstCommit.link" target="_blank"
+                <span class="text-xs">
+                    <span class="flex flex-row gap-2 items-center">
+                        <span v-if="gitUser.bio" class="leading-none opacity-50 text-sm">
+                            {{ gitUser.bio }}
+                        </span>
+                    </span>
+                </span>
+            </div>
+
+            <!-- First Commit Section - Only show if firstCommit exists -->
+            <div v-if="gitUser.firstCommit" class="flex items-center justify-between gap-4">
+                <NuxtLink class="flex flex-col gap-2 line-clamp-1" :href="gitUser.firstCommit.link" target="_blank"
                     rel="noopener noreferrer">
-                    <div v-if="!gitUser" class="h-5 w-64 animate-pulse bg-gray-300" />
-                    <span v-else class="line-clamp-1">
+                    <span class="line-clamp-1">
                         {{ gitUser.firstCommit.message }}
                     </span>
                     <span class="text-xs">
                         <span class="flex flex-row gap-2 items-center">
-                            <img v-if="gitUser" class="rounded-full h-4 w-4"
-                                :src="gitUser.firstCommit.repositoryOwnerAvatar"
-                                :alt="`Avatar for ${gitUser.organization}`" />
-                            <div v-if="!gitUser" class="h-4 w-48 animate-pulse bg-gray-200" />
-                            <span v-if="gitUser">{{ gitUser.firstCommit.repositoryName }}</span>
+                            <img v-if="gitUser.firstCommit.repositoryOwnerAvatar" class="rounded-full h-4 w-4"
+                                :src="gitUser.firstCommit.repositoryOwnerAvatar" :alt="`Repository owner avatar`" />
+                            <span>{{ gitUser.firstCommit.repositoryName }}</span>
                         </span>
                     </span>
                 </NuxtLink>
+
+                <!-- Share Button -->
                 <div class="flex flex-row gap-2">
-                    <!-- share to twitter url -->
                     <NuxtLink
                         class="flex-shrink-0 rounded border-transparent border-2 bg-black text-white hover:border-black hover:bg-white hover:text-black text-sm shadow px-2 py-1 md:px-3 md:py-2 flex flex-row gap-2 items-center transition-colors"
                         :href="shareLink" @click.prevent="nativeShare">
@@ -80,11 +102,33 @@
                 </div>
             </div>
         </main>
+
+        <!-- Analysis Section -->
+        <nav v-if="gitUser" class="flex flex-wrap flex-row gap-2 items-start max-w-[500px] mx-auto">
+            <button v-for="(button, index) in gitHubActions" :key="index"
+                class="rounded flex-shrink-0 bg-grey-400 border border-black hover:bg-red-500 hover:text-white active:bg-red-500 text-sm shadow px-3 py-2 flex flex-row gap-2 items-center"
+                @click="analyzeUser(gitUser)">
+                <Icon :name="button.icon" />
+                {{ button.label }}
+            </button>
+        </nav>
+        <nav v-if="gitUser && geminiBtn" class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
+            <button
+                class="rounded flex-shrink-0 bg-blue-500 text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center border border-black hover:bg-rose-500 hover:text-white active:bg-red-500"
+                @click="analyzeUser(gitUser)">
+                <Icon name="ri:gemini-fill" />
+                See what Gemini thinks about this user
+            </button>
+        </nav>
+        <main v-show="showAnalysis">
+            <UserAnalysis v-if="showAnalysis" :gitUser="gitUser!" />
+        </main>
     </div>
 </template>
 
 <script setup lang="ts">
-// import 'cal-sans'
+import UserAnalysis from '~/components/UserAnalysis.vue';
+import type { GitHubUser } from '~/utils/schemas/githubSchemas'
 
 definePageMeta({
     alias: ["/user/:username"],
@@ -95,16 +139,36 @@ definePageMeta({
     },
 });
 
-const route = useRoute("username");
-const username = route.params.username;
+const route = useRoute();
+const username = route.params.username as string;
 
 const newUsername = ref("");
+const showAnalysis = ref(false);
+const geminiBtn = ref(true);
+
+const gitHubActions = [
+    { icon: 'uim:favorite', label: 'Latest commit' },
+    { icon: 'tabler:pinned-filled', label: 'Pinned Repositories' },
+    { icon: 'ri:fire-fill', label: 'Hottest Repository' },
+    { icon: 'material-symbols:timer', label: 'Contribution streak' },
+    { icon: 'ri:speak-ai-fill', label: 'Primary Languages' }
+];
 
 function openUser() {
     navigateTo(`/${newUsername.value.toLowerCase()}`);
 }
 
-const { data: gitUser, error } = await useFetch(`/api/user/${username}`, {
+function connectGithub() {
+    console.log('Connecting to GitHub...');
+}
+
+function analyzeUser(userData: GitHubUser) {
+    showAnalysis.value = true;
+    geminiBtn.value = false;
+    console.log('Analyzing user:', userData.username);
+}
+
+const { data: gitUser, error } = await useFetch<GitHubUser>(`/api/user/${username}`, {
     lazy: true,
 });
 
@@ -125,22 +189,20 @@ const message = computed(() => {
     if (user.value === username) {
         return `Check me out on GitHub!`;
     }
-
     return `Check out ${username}'s GitHub.`;
 });
 
 const errorMessage = computed(() => {
-    if (error) {
-        return error.value?.data.message || "";
+    if (error.value) {
+        return error.value.data?.message || "An error occurred";
     }
     return null;
 });
 
-const shareLink = computed(
-    () =>
-        `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            message.value + `\n\nhttps://git-reveal.netlify.app/${username}`
-        )}`
+const shareLink = computed(() =>
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        message.value + `\n\nhttps://git-reveal.netlify.app/${username}`
+    )}`
 );
 
 async function nativeShare() {
@@ -152,8 +214,8 @@ async function nativeShare() {
                 url: `https://git-reveal.netlify.app/${username}`,
             });
         }
-    } catch {
-        // ignore errors sharing to native share and fall back directly to Twitter
+    } catch (error) {
+        console.error('Error sharing:', error);
     }
     return navigateTo(shareLink.value, { external: true, open: { target: "_blank" } });
 }
