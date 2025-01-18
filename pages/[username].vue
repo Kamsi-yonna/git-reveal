@@ -48,7 +48,16 @@
 
         <main>
             <UserAnalysis v-if="userAnalysis" :gitUser="gitUser!" />
-            <GitHubOptionsCard v-if="!userAnalysis" :gitUser="gitUser!" :currentFilter="currentFilter" />
+    
+            <LatestCommitCard v-if="currentFilter === 'Latest Commit'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
+
+            <PinnedRepoCard v-if="currentFilter === 'Pinned Repositories'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
+            
+            <HottestRepoCard v-if="currentFilter === 'Hottest Repository'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
+
+            <UserStreaksCard v-if="currentFilter === 'User Streaks'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
+
+            <UserStackCard v-if="currentFilter === 'User Stack'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
         </main>
     </div>
 </template>
@@ -101,8 +110,8 @@ const gitHubActions = [
     { icon: 'uim:favorite', label: 'Latest Commit' },
     { icon: 'tabler:pinned-filled', label: 'Pinned Repositories' },
     { icon: 'ri:fire-fill', label: 'Hottest Repository' },
-    { icon: 'material-symbols:timer', label: 'Contributions Streak' },
-    { icon: 'ri:speak-ai-fill', label: 'Primary Languages' }
+    { icon: 'material-symbols:timer', label: 'User Streaks' },
+    { icon: 'ri:speak-ai-fill', label: 'User Stack' }
 ];
 
 function openUser() {
