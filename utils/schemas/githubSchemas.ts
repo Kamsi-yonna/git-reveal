@@ -2,24 +2,49 @@ import * as v from 'valibot'
 
 export interface GitHubUser {
   username: string
-  author?: string
   avatar: string
-
-  repositoryStats?: {
-    totalRepositories: number
-    totalStars: number
+  activityMetrics: {
+    recentEvents: {
+      type: string 
+      repo: string 
+      created_at: string
+      payload: {
+        commits: {
+          message: string
+        }[] 
+      }
+    }[] 
   }
-  activityMetrics?: {
-    followerCount: number
+  latestCommit: {
+    html_url: string
+    commit: {
+      message: string
+      author: {
+        date: string
+      }
+    }
+    repository: {
+      full_name: string
+      owner: {
+        avatar_url: string
+      }
+    }
   }
-  bio?: string
-  firstCommit?: {
-    message: string
-    link: string
-    repositoryOwnerAvatar?: string
-    repositoryName: string
-  }
-  authorUrl?: string // Add any other properties you expect
+  pinnedRepos: {
+    name: string
+    description: string
+    url: string
+    stargazerCount: number
+    forkCount: number
+    primaryLanguage: {
+      name: string
+      color: string
+    }
+  }[]
+  languages: {
+    language: string
+    bytes: number
+  }[]
 }
 
 export const ContributionStatsSchema = v.object({
