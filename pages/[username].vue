@@ -48,16 +48,21 @@
 
         <main>
             <UserAnalysis v-if="userAnalysis" :gitUser="gitUser!" />
-    
-            <LatestCommitCard v-if="currentFilter === 'Latest Commit'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
 
-            <PinnedRepoCard v-if="currentFilter === 'Pinned Repositories'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
-            
-            <HottestRepoCard v-if="currentFilter === 'Hottest Repository'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
+            <LatestCommitCard v-if="currentFilter === 'Latest Commit'" :gitUser="gitUser!"
+                :currentFilter="currentFilter" />
 
-            <UserStreaksCard v-if="currentFilter === 'User Streaks'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
+            <!--
+            <PinnedRepoCard v-if="currentFilter === 'Pinned Repositories'" :gitUser="gitUser!"
+                :currentFilter="currentFilter" />
 
-            <UserStackCard v-if="currentFilter === 'User Stack'" :gitUser="gitUser!" :currentFilter="currentFilter"  />
+            <HottestRepoCard v-if="currentFilter === 'Hottest Repository'" :gitUser="gitUser!"
+                :currentFilter="currentFilter" />
+
+            <UserStreaksCard v-if="currentFilter === 'User Streaks'" :gitUser="gitUser!"
+                :currentFilter="currentFilter" />
+
+            <UserStackCard v-if="currentFilter === 'User Stack'" :gitUser="gitUser!" :currentFilter="currentFilter" /> -->
         </main>
     </div>
 </template>
@@ -85,7 +90,7 @@ const props = defineProps<{
 
 // State variables
 const userAnalysis = ref(false);
-const currentFilter = ref('Latest Commit');
+const currentFilter = ref('');
 const isGeminiBtnVisible = ref(true);
 
 function setFilter(filter: string) {
@@ -120,6 +125,12 @@ function openUser() {
 
 const { data: gitUser, error } = await useFetch<GitHubUser>(`/api/user/${username}`, {
     lazy: true,
+    transform: (data) => ({
+        ...data,
+        latestCommit: data.latestCommit,
+        pinnedRepos: data.pinnedRepos,
+        languages: data.languages
+    })
 });
 
 const message = computed(() => {
