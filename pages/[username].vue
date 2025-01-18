@@ -25,24 +25,30 @@
         <GitHubUserCard v-else-if="gitUser" :gitUser="gitUser" />
 
         <!-- Analysis Section -->
+
         <nav v-if="gitUser" class="flex flex-wrap flex-row gap-2 items-start max-w-[500px] mx-auto">
             <button v-for="(button, index) in gitHubActions" :key="index"
                 class="rounded flex-shrink-0 bg-grey-400 border border-black hover:bg-red-500 hover:text-white active:bg-red-500 text-sm shadow px-3 py-2 flex flex-row gap-2 items-center"
-                @click="analyzeUser(gitUser)">
+                :class="{ 'bg-red-500 text-white': currentFilter === button.label, 'bg-grey-400': currentFilter !== button.label }"
+                @click="setFilter(button.label)">
                 <Icon :name="button.icon" />
                 {{ button.label }}
             </button>
         </nav>
-        <nav v-if="gitUser && geminiBtn" class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
+
+
+        <nav v-if="isGeminiBtnVisible" class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
             <button
-                class="rounded flex-shrink-0 bg-blue-500 text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center border border-black hover:bg-rose-500 hover:text-white active:bg-red-500"
-                @click="analyzeUser(gitUser)">
+                class="rounded flex-shrink-0 bg-blue-500 text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center border border-black hover:bg-rose-500 hover:text-white"
+                @click="toggleUserAnalysis">
                 <Icon name="ri:gemini-fill" />
                 See what Gemini thinks about this user
             </button>
         </nav>
-        <main v-show="showAnalysis">
-            <UserAnalysis v-if="showAnalysis" :gitUser="gitUser!" />
+
+        <main>
+            <UserAnalysis v-if="userAnalysis" :gitUser="gitUser!" />
+            <GitHubOptionsCard v-if="!userAnalysis" :gitUser="gitUser!" :currentFilter="currentFilter" />
         </main>
     </div>
 </template>
@@ -63,14 +69,39 @@ definePageMeta({
 const route = useRoute();
 const username = route.params.username as string;
 const newUsername = ref("");
-const showAnalysis = ref(false);
-const geminiBtn = ref(true);
+
+const props = defineProps<{
+    gitUser: GitHubUser;
+}>();
+
+// State variables
+const userAnalysis = ref(false);
+const currentFilter = ref('Latest Commit');
+const isGeminiBtnVisible = ref(true);
+
+function setFilter(filter: string) {
+    currentFilter.value = filter;
+    userAnalysis.value = false
+    isGeminiBtnVisible.value = true
+}
+
+// Function to toggle User Analysis visibility
+function toggleUserAnalysis() {
+    userAnalysis.value = !userAnalysis.value;
+    if (userAnalysis.value) {
+        isGeminiBtnVisible.value = false;
+        currentFilter.value = '';
+    } else {
+        isGeminiBtnVisible.value = true;
+        currentFilter.value = 'Latest Commit';
+    }
+}
 
 const gitHubActions = [
-    { icon: 'uim:favorite', label: 'Latest commit' },
+    { icon: 'uim:favorite', label: 'Latest Commit' },
     { icon: 'tabler:pinned-filled', label: 'Pinned Repositories' },
     { icon: 'ri:fire-fill', label: 'Hottest Repository' },
-    { icon: 'material-symbols:timer', label: 'Contribution streak' },
+    { icon: 'material-symbols:timer', label: 'Contributions Streak' },
     { icon: 'ri:speak-ai-fill', label: 'Primary Languages' }
 ];
 
@@ -78,16 +109,9 @@ function openUser() {
     navigateTo(`/${newUsername.value.toLowerCase()}`);
 }
 
-function analyzeUser(userData: GitHubUser) {
-    showAnalysis.value = true;
-    geminiBtn.value = false;
-    console.log('Analyzing user:', userData.username);
-}
-
 const { data: gitUser, error } = await useFetch<GitHubUser>(`/api/user/${username}`, {
     lazy: true,
 });
-
 
 const message = computed(() => {
     if (user.value === username) {
@@ -100,7 +124,7 @@ const errorMessage = computed(() => {
     if (error.value) {
         return error.value.data?.message || "An error occurred";
     }
-    return null;
+    return;
 });
 
 const user = useCookie("github-user");
