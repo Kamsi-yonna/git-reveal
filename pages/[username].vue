@@ -37,7 +37,8 @@
         </nav>
 
 
-        <nav v-if="isGeminiBtnVisible" class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
+        <nav v-if="isGeminiBtnVisible && gitUser"
+            class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
             <button
                 class="rounded flex-shrink-0 bg-blue-500 text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center border border-black hover:bg-rose-500 hover:text-white"
                 @click="toggleUserAnalysis">
@@ -52,10 +53,10 @@
             <LatestCommitCard v-if="currentFilter === 'Latest Commit'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
 
-            <!--
             <PinnedRepoCard v-if="currentFilter === 'Pinned Repositories'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
 
+            <!--
             <HottestRepoCard v-if="currentFilter === 'Hottest Repository'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
 
