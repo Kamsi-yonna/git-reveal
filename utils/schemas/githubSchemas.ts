@@ -5,15 +5,23 @@ export interface GitHubUser {
   avatar: string
   activityMetrics: {
     recentEvents: {
-      type: string 
-      repo: string 
+      type: string
+      repo: string
       created_at: string
       payload: {
         commits: {
           message: string
-        }[] 
+        }[]
       }
-    }[] 
+    }[]
+  }
+  repositoryStats: {
+    popularRepositories: {
+      name: string
+      stars: number
+      description: any
+      url: string
+    }[]
   }
   latestCommit: {
     html_url: string
