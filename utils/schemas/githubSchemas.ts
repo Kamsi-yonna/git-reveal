@@ -1,31 +1,5 @@
 import * as v from 'valibot'
 
-export const ContributionStatsSchema = v.object({
-  total_contributions: v.number(),
-  weeks: v.array(
-    v.object({
-      w: v.string(),
-      c: v.number()
-    })
-  )
-})
-
-export const ActivitySchema = v.object({
-  total_count: v.number(),
-  items: v.array(
-    v.object({
-      type: v.string(),
-      created_at: v.string(),
-      repo: v.object({
-        name: v.string(),
-        url: v.string()
-      })
-    })
-  )
-})
-
-export const LanguageStatsSchema = v.record(v.string(), v.number())
-
 export const UserSchema = v.object({
   login: v.string(),
   name: v.string(),
