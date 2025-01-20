@@ -40,8 +40,6 @@ const props = defineProps<{
     gitUser: GitHubUser;
 }>();
 
-console.log(props.gitUser.repositoryStats.popularRepositories)
-
 const topReposiroties = props.gitUser.repositoryStats.popularRepositories
 
 </script>
