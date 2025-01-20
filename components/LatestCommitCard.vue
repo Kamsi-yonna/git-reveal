@@ -43,7 +43,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { GitHubUser } from '~/utils/schemas/githubSchemas';
+import type { GitHubUser } from '~/types/user';
 
 const props = defineProps<{
     gitUser: GitHubUser;
