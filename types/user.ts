@@ -20,6 +20,10 @@ export interface GitHubUser {
       description: any
       url: string
     }[]
+    primaryLanguages: {
+      language: string
+      count: number
+    }[]
   }
   latestCommit: {
     html_url: string
