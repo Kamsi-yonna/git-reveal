@@ -1,11 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-
   pages: true,
-
   ssr: true,
-
   spaLoadingTemplate: false,
 
   devServer: {
@@ -14,7 +11,13 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css'
+        }
+      ],
       htmlAttrs: {
         lang: 'en'
       }
@@ -22,9 +25,7 @@ export default defineNuxtConfig({
   },
 
   css: ['/public/assets/css/myProject.webflow.css', '/public/assets/css/main.css'],
-
   modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', 'nuxt-icon', 'nuxt-time'],
-
   components: ['~/components'],
 
   runtimeConfig: {
