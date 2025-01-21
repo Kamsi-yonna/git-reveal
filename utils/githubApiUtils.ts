@@ -6,12 +6,12 @@ interface Repository {
 }
 
 interface Event {
-  type: string // Adjust the type based on your actual data structure
-  created_at: string // ISO date string
+  type: string
+  created_at: string
   repo: {
     name: string
   }
-  payload: any // You can define a more specific type if known
+  payload: any
 }
 
 export function calculateRepoStats(repos: any[]) {
@@ -37,14 +37,7 @@ export function formatUserResponse(userData: any) {
     authorUrl: user?.html_url,
     bio: user?.bio,
     location: user?.location,
-    organization: user?.company,
     avatar: user?.avatar_url,
-
-    socials: {
-      twitter: user?.twitter_username,
-      blog: user?.blog,
-      email: user?.email
-    },
 
     repositoryStats: {
       totalRepositories: repos.length,
@@ -52,7 +45,6 @@ export function formatUserResponse(userData: any) {
       totalForks: repoStats.totalForks,
       primaryLanguages: Object.entries(repoStats.languages)
         .sort(([langA, countA], [langB, countB]) => (countB as number) - (countA as number))
-        .slice(0, 5)
         .map(([lang, count]) => ({ language: lang, count })),
 
       popularRepositories: repos
@@ -67,17 +59,15 @@ export function formatUserResponse(userData: any) {
     },
 
     activityMetrics: {
-      recentEvents: events.slice(0, 10).map((event: Event) => ({
+      recentEvents: events.slice(0, 6).map((event: Event) => ({
         type: event.type,
         created_at: event.created_at,
         repo: event.repo.name,
         payload: event.payload
       })),
+      lastUpdated: user?.updated_at,
       followerCount: user?.followers,
-      followingCount: user?.following,
-      publicGists: user?.public_gists,
-      accountCreated: user?.created_at,
-      lastUpdated: user?.updated_at
+      followingCount: user?.following
     },
 
     firstContribution: firstCommit
