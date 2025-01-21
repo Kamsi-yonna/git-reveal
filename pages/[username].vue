@@ -56,6 +56,8 @@
             <PinnedRepoCard v-if="currentFilter === 'Pinned Repositories'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
 
+            <UserStackCard v-if="currentFilter === 'User Stack'" :gitUser="gitUser!" :currentFilter="currentFilter" />
+
             <!--
             <HottestRepoCard v-if="currentFilter === 'Hottest Repository'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
