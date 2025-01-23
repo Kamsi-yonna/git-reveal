@@ -1,6 +1,6 @@
 <template>
     <div class="flex-grow flex flex-col justify-center p-2 gap-6">
-        <nav class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
+        <nav v-if="gitUser || errorMessage" class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
             <a class="rounded flex-shrink-0 bg-black text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center"
                 href="/connect/github" external>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24">
@@ -24,7 +24,6 @@
         <GitHubUserCard v-else-if="gitUser" :gitUser="gitUser" />
 
         <!-- Analysis Section -->
-
         <nav v-if="gitUser" class="flex flex-wrap flex-row gap-2 items-start max-w-[500px] mx-auto">
             <button v-for="(button, index) in gitHubActions" :key="index"
                 class="rounded flex-shrink-0 bg-grey-400 border border-black hover:bg-red-500 hover:text-white active:bg-red-500 text-sm shadow px-3 py-2 flex flex-row gap-2 items-center"
@@ -35,7 +34,7 @@
             </button>
         </nav>
 
-        <nav v-if="isGeminiBtnVisible && gitUser"
+        <!-- <nav v-if="isGeminiBtnVisible && gitUser"
             class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
             <button
                 class="rounded flex-shrink-0 bg-blue-500 text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center border border-black hover:bg-rose-500 hover:text-white"
@@ -43,7 +42,7 @@
                 <Icon name="ri:gemini-fill" />
                 See what Gemini thinks about this user
             </button>
-        </nav>
+        </nav> -->
 
         <main>
             <UserAnalysis v-if="userAnalysis" :gitUser="gitUser!" />
@@ -51,7 +50,7 @@
             <LatestCommitCard v-if="currentFilter === 'Latest Commit'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
 
-            <PinnedRepoCard v-if="currentFilter === 'Pinned Repositories'" :gitUser="gitUser!"
+            <PopularRepoCard v-if="currentFilter === 'Popular Repositories'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
 
             <UserStackCard v-if="currentFilter === 'User Stack'" :gitUser="gitUser!" :currentFilter="currentFilter" />
@@ -64,6 +63,8 @@
                 :currentFilter="currentFilter" />
             -->
         </main>
+
+        <PageLoader v-if="isLoading && !gitUser && !errorMessage" />
     </div>
 </template>
 
@@ -93,6 +94,7 @@ const userAnalysis = ref(false);
 const currentFilter = ref('');
 const isGeminiBtnVisible = ref(true);
 
+
 function setFilter(filter: string) {
     currentFilter.value = filter;
     userAnalysis.value = false
@@ -113,9 +115,9 @@ function toggleUserAnalysis() {
 
 const gitHubActions = [
     { icon: 'uim:favorite', label: 'Latest Commit' },
-    { icon: 'tabler:pinned-filled', label: 'Pinned Repositories' },
-    { icon: 'ri:fire-fill', label: 'Hottest Repository' },
-    { icon: 'material-symbols:timer', label: 'User Streaks' },
+    { icon: 'tabler:pinned-filled', label: 'Popular Repositories' },
+    // { icon: 'ri:fire-fill', label: 'Hottest Repository' },
+    // { icon: 'material-symbols:timer', label: 'User Streaks' },
     { icon: 'ri:speak-ai-fill', label: 'User Stack' }
 ];
 
@@ -127,18 +129,19 @@ const { data: gitUser, error } = await useFetch<GitHubUser>(`/api/user/${usernam
     lazy: true,
 });
 
-const message = computed(() => {
-    if (user.value === username) {
-        return `Check me out on GitHub!`;
-    }
-    return `Check out ${username}'s GitHub.`;
-});
+const isLoading = ref(true);
+if (gitUser.value) {
+    isLoading.value = false;
+} else if (error.value) {
+    isLoading.value = false;
+}
 
+// Error message handling
 const errorMessage = computed(() => {
     if (error.value) {
         return error.value.data?.message || "An error occurred";
     }
-    return;
+    return null;
 });
 
 const user = useCookie("github-user");
