@@ -2,6 +2,17 @@ export interface GitHubUser {
   username: string
   avatar: string
   activityMetrics: {
+    totalContributions: number
+    currentStreak: {
+      count: number
+      startDate: string
+      endDate: string
+    }
+    longestStreak: {
+      count: number
+      startDate: string
+      endDate: string
+    }
     recentEvents: {
       type: string
       repo: string

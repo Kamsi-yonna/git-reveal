@@ -28,6 +28,103 @@ export function calculateRepoStats(repos: any[]) {
   )
 }
 
+// export function calculateCurrentStreak(events: Event[]): number {
+//   if (!events.length) return 0
+
+//   //sort events in desc order
+//   const sortedEvents = [...events].sort(
+//     (a: Event, b: Event) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+//   )
+
+//   let currentStreak = 0
+//   let lastDate = new Date(sortedEvents[0].created_at)
+//   let today = new Date()
+//   today.setHours(0, 0, 0, 0)
+//   lastDate.setHours(0, 0, 0, 0)
+
+//   if ((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24) > 1) {
+//     return 0
+//   }
+
+//   const consecutiveDates = new Set<string>()
+
+//   for (const event of sortedEvents) {
+//     const eventDate = new Date(event.created_at)
+//     eventDate.setHours(0, 0, 0, 0)
+//     const dateString = eventDate.toISOString().split('T')[0]
+
+//     if (consecutiveDates.has(dateString)) continue
+
+//     const daysDifference = (lastDate.getTime() - eventDate.getTime()) / (1000 ** 60 * 60 * 24)
+
+//     if (daysDifference <= 1) {
+//       currentStreak++
+//       lastDate = eventDate
+//       consecutiveDates.add(dateString)
+//     } else {
+//       break
+//     }
+//   }
+//   return currentStreak
+// }
+
+// export function calculateCurrentStreak(events: Event[]): number {
+//   if (!events.length) return 0
+
+//   // Sort events in descending order by date
+//   const sortedEvents = [...events].sort(
+//     (a: Event, b: Event) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+//   )
+
+//   // Get today's date at midnight UTC
+//   const today = new Date()
+//   today.setUTCHours(0, 0, 0, 0)
+
+//   // Get most recent event date at midnight UTC
+//   const mostRecentDate = new Date(sortedEvents[0].created_at)
+//   mostRecentDate.setUTCHours(0, 0, 0, 0)
+
+//   // If no activity today or yesterday, streak is 0
+//   const daysSinceLastActivity = Math.floor((today.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24))
+//   if (daysSinceLastActivity > 1) {
+//     return 0
+//   }
+
+//   let currentStreak = 1 // Count the most recent day
+//   const processedDates = new Set<string>()
+//   processedDates.add(mostRecentDate.toISOString().split('T')[0])
+
+//   let previousDate = mostRecentDate
+
+//   // Loop through events to find consecutive days
+//   for (let i = 1; i < sortedEvents.length; i++) {
+//     const eventDate = new Date(sortedEvents[i].created_at)
+//     eventDate.setUTCHours(0, 0, 0, 0)
+//     const dateString = eventDate.toISOString().split('T')[0]
+
+//     // Skip if we already counted this date
+//     if (processedDates.has(dateString)) continue
+
+//     // Calculate days between current event and previous date
+//     const daysDifference = Math.floor((previousDate.getTime() - eventDate.getTime()) / (1000 * 60 * 60 * 24))
+
+//     if (daysDifference === 1) {
+//       // Consecutive day found
+//       currentStreak++
+//       previousDate = eventDate
+//       processedDates.add(dateString)
+//     } else if (daysDifference === 0) {
+//       // Same day activity, continue checking
+//       continue
+//     } else {
+//       // Break in the streak
+//       break
+//     }
+//   }
+
+//   return currentStreak
+// }
+
 export function formatUserResponse(userData: any) {
   const { user, repos, firstCommit, events } = userData
   const repoStats = calculateRepoStats(repos)
@@ -68,6 +165,7 @@ export function formatUserResponse(userData: any) {
       lastUpdated: user?.updated_at,
       followerCount: user?.followers,
       followingCount: user?.following
+      // currentStreaks: calculateCurrentStreak(events)
     },
 
     firstContribution: firstCommit
