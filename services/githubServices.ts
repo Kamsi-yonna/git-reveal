@@ -21,7 +21,7 @@ export class GitHubService {
       fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=100`, {
         headers: this.headers
       }),
-      fetch(`https://api.github.com/users/${encodeURIComponent(username)}/events/public?per_page=30`, {
+      fetch(`https://api.github.com/users/${encodeURIComponent(username)}/events/public?per_page=100`, {
         headers: this.headers
       })
     ])
