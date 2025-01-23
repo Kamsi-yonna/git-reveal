@@ -1,5 +1,4 @@
 <template>
-  <div class="min-h-[100svh] flex flex-col justify-stretch">
     <div class="flex-grow flex flex-col mx-auto justify-center p-2">
       <main class="p-8 m-2 max-w-[500px] w-full mx-auto flex-col flex gap-4">
         <a class="rounded bg-black text-white shadow px-3 py-2 flex flex-row gap-2 items-center " href="/connect/github"
@@ -17,22 +16,6 @@
         <UserNameForm v-model="username" placeholder="kamsi-yonna" @submit="openUser" />
       </main>
     </div>
-
-    <footer class="mt-auto p-2 text-center text-sm opacity-75 hover:opacity-100">
-      <a class="hover:underline" href="https://github.com/Kamsi-yonna/git-reveal">
-        source
-      </a>
-      &middot;
-      made with ❤️ by <a class="font-semibold hover:underline" href="https://github.com/Kamsi-yonna">
-        @Kamsi-yonna
-      </a>
-
-      &middot;
-      inspiration <a class="font-semibold hover:underline" href="https://x.com/danielcroe">
-        @danielcroe
-      </a>
-    </footer>
-  </div>
 </template>
 
 <script setup lang="ts">

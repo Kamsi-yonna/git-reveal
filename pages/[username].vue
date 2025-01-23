@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-[100svh] flex-grow flex flex-col justify-center p-2 gap-6">
+    <div class="flex-grow flex flex-col justify-center p-2 gap-6">
         <nav class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
             <a class="rounded flex-shrink-0 bg-black text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center"
                 href="/connect/github" external>
@@ -35,7 +35,6 @@
             </button>
         </nav>
 
-
         <nav v-if="isGeminiBtnVisible && gitUser"
             class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
             <button
@@ -57,11 +56,11 @@
 
             <UserStackCard v-if="currentFilter === 'User Stack'" :gitUser="gitUser!" :currentFilter="currentFilter" />
 
-            <!--
-            <HottestRepoCard v-if="currentFilter === 'Hottest Repository'" :gitUser="gitUser!"
+            <UserStreaksCard v-if="currentFilter === 'User Streaks'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
 
-            <UserStreaksCard v-if="currentFilter === 'User Streaks'" :gitUser="gitUser!"
+            <!--
+            <HottestRepoCard v-if="currentFilter === 'Hottest Repository'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
             -->
         </main>
