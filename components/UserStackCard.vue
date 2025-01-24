@@ -48,7 +48,6 @@ const filteredLanguages = computed(() => {
 });
 
 const stack = props.gitUser.repositoryStats.primaryLanguages;
-console.log(stack);
 </script>
 
 <style scoped>
