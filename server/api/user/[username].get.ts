@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${config.TOGETHER_API_KEY}`
+        Authorization: `Bearer ${config.togetherApiKey}`
       },
       body: JSON.stringify({
         model: 'deepseek-ai/DeepSeek-V3', // Use DeepSeek model or another supported model

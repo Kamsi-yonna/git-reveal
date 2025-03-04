@@ -30,7 +30,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     redirectUri: process.env.NUXT_REDIRECT_URI,
-    TOGETHER_API_KEY: process.env.NUXT_TOGETHER_API_KEY,
+    togetherApiKey: process.env.NUXT_TOGETHER_API_KEY,
     github: {
       token: process.env.NUXT_GITHUB_TOKEN,
       clientId: process.env.NUXT_GITHUB_CLIENT_ID,
