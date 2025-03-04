@@ -1,5 +1,6 @@
 <template>
     <div class="flex-grow flex flex-col justify-center p-2 gap-6">
+        <!-- Navigation and UserNameForm -->
         <nav v-if="gitUser || errorMessage" class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
             <a class="rounded flex-shrink-0 bg-black text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center"
                 href="/connect/github" external>
@@ -21,6 +22,7 @@
             </p>
         </main>
 
+        <!-- GitHub User Card -->
         <GitHubUserCard v-else-if="gitUser" :gitUser="gitUser" />
 
         <!-- Analysis Section -->
@@ -34,36 +36,31 @@
             </button>
         </nav>
 
-        <!-- <nav v-if="isGeminiBtnVisible && gitUser"
-            class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
+        <!-- AI Analysis Button -->
+        <nav v-if="isAIBtnVisible && gitUser" class="flex flex-row gap-2 justify-center max-w-[500px] w-full mx-auto">
             <button
                 class="rounded flex-shrink-0 bg-blue-500 text-white text-sm shadow px-3 py-2 flex flex-row gap-2 items-center border border-black hover:bg-rose-500 hover:text-white"
                 @click="toggleUserAnalysis">
                 <Icon name="ri:gemini-fill" />
-                See what Gemini thinks about this user
+                See what AI thinks about this user
             </button>
-        </nav> -->
+        </nav>
 
+        <!-- User Analysis Component -->
         <main>
-            <UserAnalysis v-if="userAnalysis" :gitUser="gitUser!" />
+            <UserAnalysis v-if="userAnalysis" :gitUser="gitUser!" :analysis="gitUser?.analysis" />
 
+            <!-- Other Cards -->
             <LatestCommitCard v-if="currentFilter === 'Latest Commit'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
-
             <PopularRepoCard v-if="currentFilter === 'Popular Repositories'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
-
             <UserStackCard v-if="currentFilter === 'User Stack'" :gitUser="gitUser!" :currentFilter="currentFilter" />
-
             <UserStreaksCard v-if="currentFilter === 'User Streaks'" :gitUser="gitUser!"
                 :currentFilter="currentFilter" />
-
-            <!--
-            <HottestRepoCard v-if="currentFilter === 'Hottest Repository'" :gitUser="gitUser!"
-                :currentFilter="currentFilter" />
-            -->
         </main>
 
+        <!-- Loading State -->
         <PageLoader v-if="isLoading && !gitUser && !errorMessage" />
     </div>
 </template>
@@ -84,52 +81,26 @@ definePageMeta({
 const route = useRoute();
 const username = route.params.username as string;
 const newUsername = ref("");
-
-const props = defineProps<{
-    gitUser: GitHubUser;
-}>();
+const isLoading = ref(true);
 
 // State variables
 const userAnalysis = ref(false);
 const currentFilter = ref('');
-const isGeminiBtnVisible = ref(true);
+const isAIBtnVisible = ref(true);
 
-
-function setFilter(filter: string) {
-    currentFilter.value = filter;
-    userAnalysis.value = false
-    isGeminiBtnVisible.value = true
-}
-
-// Function to toggle User Analysis visibility
-function toggleUserAnalysis() {
-    userAnalysis.value = !userAnalysis.value;
-    if (userAnalysis.value) {
-        isGeminiBtnVisible.value = false;
-        currentFilter.value = '';
-    } else {
-        isGeminiBtnVisible.value = true;
-        currentFilter.value = 'Latest Commit';
-    }
-}
-
+// GitHub Actions
 const gitHubActions = [
     { icon: 'uim:favorite', label: 'Latest Commit' },
     { icon: 'tabler:pinned-filled', label: 'Popular Repositories' },
-    // { icon: 'ri:fire-fill', label: 'Hottest Repository' },
-    // { icon: 'material-symbols:timer', label: 'User Streaks' },
     { icon: 'ri:speak-ai-fill', label: 'User Stack' }
 ];
 
-function openUser() {
-    navigateTo(`/${newUsername.value.toLowerCase()}`);
-}
-
+// Fetch GitHub user data
 const { data: gitUser, error } = await useFetch<GitHubUser>(`/api/user/${username}`, {
     lazy: true,
 });
 
-const isLoading = ref(true);
+// Handle loading state
 if (gitUser.value) {
     isLoading.value = false;
 } else if (error.value) {
@@ -144,12 +115,35 @@ const errorMessage = computed(() => {
     return null;
 });
 
-const user = useCookie("github-user");
+// Function to toggle User Analysis visibility
+function toggleUserAnalysis() {
+    userAnalysis.value = !userAnalysis.value;
+    if (userAnalysis.value) {
+        isAIBtnVisible.value = false;
+        currentFilter.value = '';
+    } else {
+        isAIBtnVisible.value = true;
+        currentFilter.value = 'Latest Commit';
+    }
+}
 
+// Function to set filter
+function setFilter(filter: string) {
+    currentFilter.value = filter;
+    userAnalysis.value = false;
+    isAIBtnVisible.value = true;
+}
+
+// Function to navigate to a new user
+function openUser() {
+    navigateTo(`/${newUsername.value.toLowerCase()}`);
+}
+
+// SEO Meta
+const user = useCookie("github-user");
 useSeoMeta({
     title: "Git-reveal - @" + username,
 });
-
 useServerSeoMeta({
     ogTitle: "Git-reveal - @" + username,
     twitterTitle: "Git-reveal - @" + username,
