@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Create a prompt for the AI
-    const prompt = `Write about the GitHub profile of ${response.username} and maybe provide insights into their coding style, notable contributions, and potential areas for improvement. Also, suggest collaboration opportunities based on their interests and skills. Keep the analysis concise and focused on key points. You must write it using HTML tags for formatting.`
+    const prompt = `Write about the GitHub profile of ${response.username} and maybe provide insights into their coding style, notable contributions, and potential areas for improvement. Also, suggest collaboration opportunities based on their interests and skills. Keep the analysis concise and focused on key points. You must write it using HTML tags for formatting. Summarise in 450 characters or less`
 
     // Call the Together.ai API
     const req = await fetch('https://api.together.xyz/inference', {
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
       body: JSON.stringify({
         model: 'deepseek-ai/DeepSeek-V3', // Use DeepSeek model or another supported model
         prompt: prompt,
-        // max_tokens: 500, // Limit the response length
+        max_tokens: 500, // Limit the response length
         temperature: 0.6, // Control creativity
         top_p: 0.95,
         repetition_penalty: 0,
@@ -43,7 +43,6 @@ export default defineEventHandler(async (event) => {
 
     const res = await req.json()
     console.log('Raw API response:', res)
-    console.log('This 1')
 
     if (!req.ok) {
       console.error('Together API error:', res)
