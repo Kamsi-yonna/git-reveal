@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Create a prompt for the AI
-    const prompt = `Write about the GitHub profile of ${response.username} and maybe provide insights into their coding style, notable contributions, and potential areas for improvement. Also, suggest collaboration opportunities based on their interests and skills. Keep the analysis concise and focused on key points. You must write it using HTML tags for formatting. Summarise in 450 characters or less`
+    const prompt = `Write briefly about the GitHub profile of ${response.username}, providing insights into their reliability, coding style, notable contributions, potential areas for improvement, and a casual, fun observation about this user. Next, suggest collaboration opportunities based on their interests and skills. Keep the analysis concise and focused on key points. Use HTML tags for formatting. Summarize in 450 words or less.`
 
     // Call the Together.ai API
     const req = await fetch('https://api.together.xyz/inference', {
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
       body: JSON.stringify({
         model: 'deepseek-ai/DeepSeek-V3', // Use DeepSeek model or another supported model
         prompt: prompt,
-        max_tokens: 500, // Limit the response length
+        max_tokens: 800, // Limit the response length
         temperature: 0.6, // Control creativity
         top_p: 0.95,
         repetition_penalty: 0,
