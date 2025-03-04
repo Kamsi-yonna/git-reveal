@@ -5,11 +5,14 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const username = getRouterParam(event, 'username')
 
-  if (!username || !username.match(/^[\w\-\d]+$/)) throw createError({ message: 'username is required' })
+  if (!username || !username.match(/^[\w\-\d]+$/)) {
+    throw createError({ message: 'Username is required' })
+  }
 
   const githubService = new GitHubService(config.github.token)
 
   try {
+    // Fetch GitHub user data
     const userData = await githubService.getUserData(username)
     const response = formatUserResponse(userData)
 
@@ -17,11 +20,64 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: 'Not enough data about this user.' })
     }
 
-    return response
+    // Create a prompt for the AI
+    const prompt = `Analyze the GitHub profile of ${response.username} and provide insights into their coding style, notable contributions, and potential areas for improvement. Also, suggest collaboration opportunities based on their interests and skills. Keep the analysis concise and focused on key points.`
+
+    // Call the Together.ai API
+    const req = await fetch('https://api.together.xyz/inference', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.TOGETHER_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-ai/DeepSeek-V3', // Use DeepSeek model or another supported model
+        prompt: prompt,
+        max_tokens: 100, // Limit the response length
+        temperature: 0.6, // Control creativity
+        top_p: 0.95,
+        repetition_penalty: 0,
+        stop: ['Human:', 'AI:'] // Stop sequences
+      })
+    })
+
+    const res = await req.json()
+    console.log('Raw API response:', res)
+
+    if (!req.ok) {
+      console.error('Together API error:', res)
+      throw createError({
+        statusCode: req.status,
+        message: res.message || 'Together API error'
+      })
+    }
+
+    // Extract the AI-generated text
+    const text = res.output?.text || res.text || (Array.isArray(res.choices) && res.choices[0]?.text)
+
+    if (!text) {
+      console.error('Unexpected API response structure:', res)
+      throw createError({
+        statusCode: 500,
+        message: 'Could not extract text from API response'
+      })
+    }
+
+    const analysis = text.trim()
+
+    // Add the AI analysis to the response
+    return {
+      ...response,
+      analysis
+    }
   } catch (error: any) {
     if (error.statusCode === 404) {
       throw createError({ statusCode: 404, message: 'User not found' })
     }
-    throw error
+    console.error('Error:', error)
+    throw createError({
+      statusCode: 500,
+      message: error.message || 'Failed to fetch user data or generate analysis.'
+    })
   }
 })

@@ -1,6 +1,7 @@
 export interface GitHubUser {
   username: string
   avatar: string
+  analysis: any
   activityMetrics: {
     totalContributions: number
     currentStreak: {
