@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
       body: JSON.stringify({
         model: 'deepseek-ai/DeepSeek-V3', // Use DeepSeek model or another supported model
         prompt: prompt,
-        max_tokens: 1000, // Limit the response length
+        max_tokens: 800, // Limit the response length
         temperature: 0.6, // Control creativity
         top_p: 0.95,
         repetition_penalty: 0,
