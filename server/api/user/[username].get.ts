@@ -4,6 +4,12 @@ import { formatUserResponse } from '~/utils/githubApiUtils'
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const username = getRouterParam(event, 'username')
+  const controller = new AbortController()
+  const signal = controller.signal
+
+  setTimeout(() => {
+    controller.abort()
+  }, 30000) // Abort after 30 seconds
 
   if (!username || !username.match(/^[\w\-\d]+$/)) {
     throw createError({ message: 'Username is required' })
@@ -38,7 +44,8 @@ export default defineEventHandler(async (event) => {
         top_p: 0.95,
         repetition_penalty: 0,
         stop: ['Human:', 'AI:'] // Stop sequences
-      })
+      }),
+      signal
     })
 
     const res = await req.json()
